@@ -1,8 +1,13 @@
 # DailyWorkspace
 
-Workspace harian modular untuk produktivitas: catatan, todo, bookmark, dan tracker pengeluaran/pemasukan dalam satu antarmuka.
-
 ![Preview](README.png)
+
+| | |
+|--|--|
+| **Nama** | DailyWorkspace |
+| **Fungsi** | Workspace harian modular untuk produktivitas pribadi |
+| **Live** | https://dailyworkspace.pages.dev |
+| **Repo** | https://github.com/Zwart04/dailyworkspace |
 
 ## Fitur
 - Dashboard ringkasan harian
@@ -10,13 +15,14 @@ Workspace harian modular untuk produktivitas: catatan, todo, bookmark, dan track
 - Todo: tugas + prioritas + centang selesai
 - Bookmarks: link penting
 - Tracker: pengeluaran dan pemasukan
+- About: informasi project
 - Settings: tema gelap/terang, prioritas default, mata uang
 - Semua data tersimpan di localStorage
 - Responsif untuk HP dan desktop
 - Tanpa login, offline-ready
 
-## Live
-- https://dailyworkspace.pages.dev
+## Screenshot
+![Preview](README.png)
 
 ## Cara pakai
 1. Buka live URL
@@ -30,6 +36,6 @@ Workspace harian modular untuk produktivitas: catatan, todo, bookmark, dan track
 - Pengguna yang butuh tool produktivitas simpel tanpa login
 
 ## Teknis
-- Pure HTML/CSS/JS
+- Pure HTML/CSS/JS modular
 - Cloudflare Pages
 - GitHub: https://github.com/Zwart04/dailyworkspace
