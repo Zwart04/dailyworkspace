@@ -1,35 +1,34 @@
 (() => {
-  const { $, esc, uid, nowIso } = window.DW;
-  const rp = (n) => Number(n || 0).toLocaleString('id-ID');
+  'use strict';
+  const { storage, esc, uid, nowIso } = window.DW;
+  const today = () => new Date().toISOString().slice(0, 10);
   const monthRange = () => {
-    const now = new Date();
-    const from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
-    const to = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10);
+    const d = new Date();
+    const from = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0, 10);
+    const to = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().slice(0, 10);
     return { from, to };
   };
+  const fmt = (n) => Number(n || 0).toLocaleString('id-ID');
 
-  const renderTracker = ({ view }) => {
-    const tracker = window.DW.storage.get('tracker') || { workTarget: 8, budgetTarget: 50000 };
-    const expenses = window.DW.storage.get('tracker_expenses') || [];
-    const income = window.DW.storage.get('tracker_income') || [];
-    const work = window.DW.storage.get('tracker_work') || { workMinutes: 0 };
+  const renderTracker = (view) => {
+    const expenses = storage.get('tracker_expenses') || [];
+    const income = storage.get('tracker_income') || [];
+    const budgetTarget = Number((storage.get('tracker_settings') || {}).budgetTarget || 0);
+    const { from, to } = monthRange();
+    const monthExp = expenses.filter(e => e.date >= from && e.date <= to).reduce((a, b) => a + Number(b.amount || 0), 0);
+    const monthIncome = income.filter(e => e.date >= from && e.date <= to).reduce((a, b) => a + Number(b.amount || 0), 0);
+    const remainingMonth = Math.max(0, budgetTarget - monthExp);
 
-    const todayExp = expenses.filter(e => e.date === today()).reduce((a, b) => a + Number(b.amount || 0), 0);
-    const monthExp = expenses.filter(e => e.date >= monthRange().from && e.date <= monthRange().to).reduce((a, b) => a + Number(b.amount || 0), 0);
-    const monthIncome = income.filter(e => e.date >= monthRange().from && e.date <= monthRange().to).reduce((a, b) => a + Number(b.amount || 0), 0);
-    const monthly = monthIncome - monthExp;
+    const rows = expenses.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 20).map(e => `<tr><td>${esc(e.note || '-')}</td><td>${esc(e.date)}</td><td style="text-align:right;color:var(--danger)">-Rp ${fmt(e.amount)}</td></tr>`).join('');
+    const inRows = income.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 20).map(e => `<tr><td>${esc(e.note || '-')}</td><td>${esc(e.date)}</td><td style="text-align:right;color:var(--success)">+Rp ${fmt(e.amount)}</td></tr>`).join('');
 
-    const rows = expenses.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 20).map(e => `<tr><td>${esc(e.note || '-')}</td><td>${esc(e.date)}</td><td style="text-align:right;color:var(--danger)">-${rp(e.amount)}</td></tr>`).join('');
-    const inRows = income.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 20).map(e => `<tr><td>${esc(e.note || '-')}</td><td>${esc(e.date)}</td><td style="text-align:right;color:var(--success)">+${rp(e.amount)}</td></tr>`).join('');
-
-    view.innerHTML = `
-      <div class="hero"><h1>Tracker</h1><p>Monitoring pengeluaran, pemasukan, dan jam kerja.</p></div>
+    view.innerHTML =`
+      <div class="hero"><h1>Tracker</h1><p>Monitoring pengeluaran, pemasukan, dan anggaran bulanan.</p></div>
       <div class="grid grid-3" style="margin-bottom:14px">
-        <div class="card"><div class="badge">Pemasukan bulan ini</div><div style="font-weight:700;font-size:22px;color:var(--success)">${rp(monthIncome)}</div></div>
-        <div class="card"><div class="badge">Pengeluaran bulan ini</div><div style="font-weight:700;font-size:22px;color:var(--danger)">${rp(monthExp)}</div></div>
-        <div class="card"><div class="badge">Sisa bulan ini</div><div style="font-weight:700;font-size:22px">${rp(monthly)}</div></div>
+        <div class="card"><div class="badge">Pemasukan bulan ini</div><div style="font-weight:700;font-size:22px;color:var(--success)">Rp ${fmt(monthIncome)}</div></div>
+        <div class="card"><div class="badge">Pengeluaran bulan ini</div><div style="font-weight:700;font-size:22px;color:var(--danger)">Rp ${fmt(monthExp)}</div></div>
+        <div class="card"><div class="badge">Sisa anggaran bulan ini</div><div style="font-weight:700;font-size:22px">Rp ${fmt(remainingMonth)}</div></div>
       </div>
-
       <div class="grid grid-2" style="margin-bottom:14px">
         <form id="expForm" class="card">
           <h3 style="margin:0 0 10px">Tambah pengeluaran</h3>
@@ -48,7 +47,6 @@
           </div>
         </form>
       </div>
-
       <div class="card">
         <h3 style="margin:0 0 10px">Riwayat transaksi</h3>
         <div class="table-wrap">
@@ -57,24 +55,24 @@
             <tbody>${rows || inRows || '<tr><td colspan=3><div class="empty">Belum ada transaksi.</div></td></tr>'}</tbody>
           </table>
         </div>
-      </div>
-    `;
+      </div>`;
 
-    $('#expForm').addEventListener('submit', (e) => {
+    document.getElementById('expForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const list = window.DW.storage.get('tracker_expenses') || [];
-      list.push({ id: 'E-' + uid().toUpperCase(), amount: Number($('#e_amount').value || 0), note: $('#e_note').value.trim(), date: today(), createdAt: nowIso() });
-      window.DW.storage.set('tracker_expenses', list);
+      const list = storage.get('tracker_expenses') || [];
+      list.push({ id: 'E-' + uid().toUpperCase(), amount: Number(document.getElementById('e_amount').value || 0), note: document.getElementById('e_note').value.trim(), date: today(), createdAt: nowIso() });
+      storage.set('tracker_expenses', list);
       window.DW.route.navigate();
     });
 
-    $('#incForm').addEventListener('submit', (e) => {
+    document.getElementById('incForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const list = window.DW.storage.get('tracker_income') || [];
-      list.push({ id: 'I-' + uid().toUpperCase(), amount: Number($('#i_amount').value || 0), note: $('#i_note').value.trim(), date: today(), createdAt: nowIso() });
-      window.DW.storage.set('tracker_income', list);
+      const list = storage.get('tracker_income') || [];
+      list.push({ id: 'I-' + uid().toUpperCase(), amount: Number(document.getElementById('i_amount').value || 0), note: document.getElementById('i_note').value.trim(), date: today(), createdAt: nowIso() });
+      storage.set('tracker_income', list);
       window.DW.route.navigate();
     });
   };
+
   window.DW.route.add('#/tracker', renderTracker);
 })();

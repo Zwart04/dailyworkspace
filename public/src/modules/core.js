@@ -1,9 +1,13 @@
 (() => {
+  'use strict';
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
   const storage = {
-    get(key) { try { return JSON.parse(localStorage.getItem('dw_' + key)) ?? null; } catch { return null; } },
+    get(key) {
+      try { return JSON.parse(localStorage.getItem('dw_' + key)) ?? null; }
+      catch { return null; }
+    },
     set(key, value) { localStorage.setItem('dw_' + key, JSON.stringify(value)); },
     remove(key) { localStorage.removeItem('dw_' + key); }
   };
@@ -17,7 +21,7 @@
     const routes = {};
     const add = (hash, handler) => { routes[hash] = handler; };
     const navigate = () => {
-      const hash = location.hash || '#/dashboard';
+      const hash = (location.hash || '#/dashboard').split('?')[0];
       const handler = routes[hash] || routes['#/dashboard'];
       const app = $('#app');
       app.innerHTML = '';
@@ -27,7 +31,8 @@
       view.id = 'view';
       section.appendChild(view);
       app.appendChild(section);
-      try { handler({ view, app }); } catch (e) { view.innerHTML = `<div class="empty">Error: ${esc(e?.message || e)}</div>`; }
+      try { handler(view, app, $('#navLinks')); }
+      catch (e) { view.innerHTML = '<div class="empty">Error: ' + esc(e && e.message ? e.message : e) + '</div>'; }
     };
     window.addEventListener('hashchange', navigate);
     document.addEventListener('DOMContentLoaded', navigate);

@@ -2,14 +2,15 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DailyWorkspace — Multi-Module Workspace</title>
   <meta name="theme-color" content="#0b0f1e" />
   <link rel="stylesheet" href="src/app.css" />
 </head>
 <body>
   <header class="navbar">
-    <a class="nav-logo" href="#/"><span>Daily</span><kbd>Workspace</kbd></a>
+    <a class="logo" href="#/"><span>Daily</span><kbd>Workspace</kbd></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
     <nav class="nav-links" id="navLinks">
       <a href="#/dashboard">Dashboard</a>
       <a href="#/notes">Notes</a>
@@ -18,10 +19,6 @@
       <a href="#/tracker">Tracker</a>
       <a href="#/settings">Settings</a>
     </nav>
-    <div class="nav-actions">
-      <span id="navStatus" class="badge">Ready</span>
-      <button id="installBtn" class="btn" style="display:none">Install</button>
-    </div>
   </header>
 
   <main id="app"></main>

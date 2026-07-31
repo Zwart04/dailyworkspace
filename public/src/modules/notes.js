@@ -1,7 +1,9 @@
 (() => {
-  const { $, esc, uid, nowIso } = window.DW;
-  const renderNotes = ({ view }) => {
-    const notes = (window.DW.storage.get('notes') || []).slice().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  'use strict';
+  const { storage, esc, uid, nowIso, today } = window.DW;
+
+  const renderNotes = (view) => {
+    const notes = (storage.get('notes') || []).slice().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
     const list = notes.map(n => `<div class="card"><div style="display:flex;justify-content:space-between;gap:10px"><div><strong>${esc(n.title || 'Tanpa judul')}</strong><div style="font-size:12px;color:var(--ink-weak)">${esc(n.createdAt || '-')}</div><div style="margin-top:6px">${esc(n.body || '')}</div></div><div style="display:flex;gap:6px"><button class="btn secondary sm" data-edit="${esc(n.id)}">Edit</button><button class="btn danger sm" data-del="${esc(n.id)}">Hapus</button></div></div></div>`).join('') || '<div class="empty">Belum ada catatan.</div>';
 
     view.innerHTML = `
@@ -16,19 +18,20 @@
       <div class="grid grid-3">${list}</div>
     `;
 
-    $('#noteForm').addEventListener('submit', (e) => {
+    document.getElementById('noteForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const notes = window.DW.storage.get('notes') || [];
-      notes.unshift({ id: 'N-' + uid().toUpperCase(), title: $('#n_title').value.trim(), body: $('#n_body').value.trim(), createdAt: nowIso() });
-      window.DW.storage.set('notes', notes);
+      const notes = storage.get('notes') || [];
+      notes.unshift({ id: 'N-' + uid().toUpperCase(), title: document.getElementById('n_title').value.trim(), body: document.getElementById('n_body').value.trim(), createdAt: nowIso() });
+      storage.set('notes', notes);
       window.DW.route.navigate();
     });
 
-    $$('[data-del]').forEach(btn => btn.addEventListener('click', () => {
-      const notes = (window.DW.storage.get('notes') || []).filter(n => n.id !== btn.dataset.del);
-      window.DW.storage.set('notes', notes);
+    document.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => {
+      const notes = (storage.get('notes') || []).filter((n) => n.id !== btn.dataset.del);
+      storage.set('notes', notes);
       window.DW.route.navigate();
     }));
   };
+
   window.DW.route.add('#/notes', renderNotes);
 })();

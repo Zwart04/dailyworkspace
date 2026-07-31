@@ -1,7 +1,10 @@
 (() => {
+  'use strict';
   const { $ } = window.DW;
-  const renderSettings = ({ view }) => {
-    const settings = window.DW.storage.get('settings') || { theme: 'dark', defaultPriority: 'medium', currency: 'IDR' };
+
+  const renderSettings = (view) => {
+    const settings = { theme: 'dark', defaultPriority: 'medium', currency: 'IDR', ...($('#s') || {}) };
+
     view.innerHTML = `
       <div class="hero"><h1>Settings</h1><p>Prefensi aplikasi.</p></div>
       <div class="card">
@@ -14,26 +17,27 @@
       </div>
     `;
 
-    $('#s_theme').value = settings.theme || 'dark';
-    $('#s_priority').value = settings.defaultPriority || 'medium';
-    $('#s_currency').value = settings.currency || 'IDR';
+    document.getElementById('s_theme').value = settings.theme || 'dark';
+    document.getElementById('s_priority').value = settings.defaultPriority || 'medium';
+    document.getElementById('s_currency').value = settings.currency || 'IDR';
 
-    $('#settingsForm').addEventListener('submit', (e) => {
+    document.getElementById('settingsForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      window.DW.storage.set('settings', { theme: $('#s_theme').value, defaultPriority: $('#s_priority').value, currency: $('#s_currency').value.trim() || 'IDR' });
+      window.DW.storage.set('settings', { theme: document.getElementById('s_theme').value, defaultPriority: document.getElementById('s_priority').value, currency: document.getElementById('s_currency').value.trim() || 'IDR' });
       alert('Settings saved');
     });
 
-    $('#s_export').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(window.DW.storage.getAll ? {} : null, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'dw-backup-' + today() + '.json'; a.click();
+    document.getElementById('s_export').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(window.DW.storage, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'dw-backup-' + window.DW.today() + '.json'; a.click();
     });
 
-    $('#s_reset').addEventListener('click', () => {
+    document.getElementById('s_reset').addEventListener('click', () => {
       if (!confirm('Reset semua data?')) return;
       localStorage.clear();
       location.hash = '#/dashboard';
     });
   };
+
   window.DW.route.add('#/settings', renderSettings);
 })();
