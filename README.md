@@ -1,41 +1,43 @@
-# DailyWorkspace
+# 🖥️ DailyWorkspace: Workspace Produktivitas Modular
+
+![GitHub stars](https://img.shields.io/github/stars/Zwart04/dailyworkspace?style=social)
+![GitHub license](https://img.shields.io/badge/License-MIT-blue)
+![Platform](https://img.shields.io/badge/Platform-Web-lightgrey)
+
+Workspace harian modular untuk produktivitas pribadi. Notes, todo, bookmarks, tracker pengeluaran/pemasukan, dan pengaturan — semuanya dalam satu antarmuka tanpa login.
+
+> **100% offline-ready. Data tersimpan lokal di browser, tidak ada server, tidak ada akun.**
 
 ![Preview](README.png)
 
-| | |
+## ✨ Fitur Utama
+
+| Fitur | Keterangan |
 |--|--|
-| **Nama** | DailyWorkspace |
-| **Fungsi** | Workspace harian modular untuk produktivitas pribadi |
-| **Live** | https://dailyworkspace.pages.dev |
-| **Repo** | https://github.com/Zwart04/dailyworkspace |
+| 📊 Dashboard | Ringkasan aktivitas harian: notes, todo, anggaran |
+| 📝 Notes | Catatan cepat dengan auto-save |
+| ✅ Todo | Tugas + prioritas + centang selesai |
+| 🔖 Bookmarks | Link penting yang sering dipakai |
+| 💰 Tracker | Pengeluaran dan pemasukan bulanan |
+| ⚙️ Settings | Tema gelap/terang, prioritas default, mata uang |
+| 📱 Responsif | Tampilan optimal HP dan desktop |
+| 🔒 Privasi | Semua data di localStorage, tanpa internet |
 
-## Fitur
-- Dashboard ringkasan harian
-- Notes: catatan cepat
-- Todo: tugas + prioritas + centang selesai
-- Bookmarks: link penting
-- Tracker: pengeluaran dan pemasukan
-- About: informasi project
-- Settings: tema gelap/terang, prioritas default, mata uang
-- Semua data tersimpan di localStorage
-- Responsif untuk HP dan desktop
-- Tanpa login, offline-ready
+## 💡 Tips Penggunaan
+- Klik module di navbar untuk berpindah halaman.
+- Data otomatis tersimpan; tidak perlu tombol save manual.
+- Reset data di Settings jika ingin mulai bersih.
 
-## Screenshot
-![Preview](README.png)
-
-## Cara pakai
-1. Buka live URL
+## 🛠️ Cara Pakai
+1. Buka [live URL](https://dailyworkspace.pages.dev)
 2. Pilih module dari navbar
-3. Tambah data dari form di setiap module
-4. Data tersimpan otomatis di browser
+3. Isi form di setiap module
+4. Data langsung tersimpan lokal
 
-## Target user
-- Freelancer/remote worker
-- Mahasiswa
-- Pengguna yang butuh tool produktivitas simpel tanpa login
-
-## Teknis
+## 🛠️ Teknologi
 - Pure HTML/CSS/JS modular
+- localStorage
 - Cloudflare Pages
-- GitHub: https://github.com/Zwart04/dailyworkspace
+
+## 📄 Lisensi
+MIT
