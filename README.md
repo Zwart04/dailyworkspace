@@ -29,10 +29,14 @@ Workspace harian modular untuk produktivitas pribadi. Notes, todo, bookmarks, tr
 - Reset data di Settings jika ingin mulai bersih.
 
 ## 🛠️ Cara Pakai
-1. Buka [live URL](https://dailyworkspace.pages.dev)
+1. Buka [dailyworkspace.pages.dev](https://dailyworkspace.pages.dev)
 2. Pilih module dari navbar
 3. Isi form di setiap module
 4. Data langsung tersimpan lokal
+
+## 👤 Target User
+- Digital workers, students, dan profesional yang butuh workspace modular tanpa login.
+- Siapa pun yang ingin mengelola catatan, tugas, bookmark, dan keuangan dalam satu tempat.
 
 ## 🛠️ Teknologi
 - Pure HTML/CSS/JS modular
